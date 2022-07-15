@@ -63,6 +63,5 @@ function worker2(arr) {
     } 
   }
 
-  difference = max - min;
-  return difference;
+  return max - min;
 }
