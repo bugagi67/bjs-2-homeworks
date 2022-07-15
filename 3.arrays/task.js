@@ -8,11 +8,11 @@ function compareArrays(arr1, arr2) {
 }
 
 function advancedFilter(arr) {
-  let resultArr;
+  let resultArr = arr
+  .filter((element) => element > 0)
+  .filter((element) => element % 3 === 0)
+  .map((i) => i * 10);
 
-  return (resultArr = arr
-    .filter((element) => element > 0)
-    .filter((element) => element % 3 === 0)
-    .map((i) => i * 10));
+  return resultArr;
   //array
 }
