@@ -143,6 +143,11 @@ class Student {
     result = arrMarks.reduce((acc, item) => acc + item, 0);
     return result / arrMarks.length;
   }
+
+  exclude(reason) {
+    this.excluded = reason;
+    delete this.subject;
+  };
 }
 
 class Algebra {
@@ -160,6 +165,13 @@ class Geometry {
 }
 
 class Physics {
+  constructor(name) {
+    this.name = name;
+    this.marks = [];
+  }
+}
+
+class History {
   constructor(name) {
     this.name = name;
     this.marks = [];
