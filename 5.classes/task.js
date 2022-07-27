@@ -97,83 +97,53 @@ class Student {
     this.name = name;
     this.gender = gender;
     this.age = age;
-    this.subject = [];
+    this.marks = {};
   }
 
-  addSubject(subject) {
-    this.subject.push(subject);
+  setSubject(subjectName) {
+    if (this.marks.hasOwnProperty(subjectName)) {
+      return console.log(`Предмет ${subjectName} уже существует`);
+    } else {
+      return (this.marks[subjectName] = []);
+    }
   }
 
   addMark(mark, subjectName) {
-    let index = this.subject.findIndex(
-      (element) => element.name === subjectName
-    );
-    if (index === -1) {
-      return null;
-    } else if (mark > 0 && mark <= 5) {
-      this.subject[index].marks.push(mark);
+    if (mark > 0 && mark < 6) {
+      if (this.marks.hasOwnProperty(subjectName)) {
+        return this.marks[subjectName].push(mark);
+      } else {
+        return this.marks[subjectName] = [mark];
+      }
     } else {
-      console.log(`Ошибка, оценка должна быть числом от 1 до 5`);
+      return console.log("Ошибка, оценка должна быть числом от 1 до 5");
     }
   }
 
   getAverageBySubject(subjectName) {
-    let sum;
-    let index = this.subject.findIndex(
-      (element) => element.name === subjectName
-    );
-    if (index === -1) {
-      return console.log(`Несуществующий предмет`);
+    let result;
+    let path = this.marks[subjectName];
+    if (this.marks.hasOwnProperty(subjectName)) {
+      let average = path.reduce((acc, item) => acc + item, 0) / path.length;
+      return average;
     } else {
-      sum = this.subject[index].marks.reduce((acc, item) => acc + item, 0);
+      return console.log("Несуществующий предмет");
     }
-    let average = sum / this.subject[index].marks.length;
-
-    return console.log(`Средний балл по предмету ${subjectName} ${average}`);
   }
 
   getAverage() {
-    let arrMarks = [];
-    let result = [];
-    for (let i = 0; i < this.subject.length; i++) {
-      for (let j = 0; j < this.subject[i].marks.length; j++) {
-        arrMarks.push(this.subject[i].marks[j]);
+    let arr = [];
+    for (let index in this.marks) {
+      for (let element of this.marks[index]) {
+        arr.push(element);
       }
     }
-    result = arrMarks.reduce((acc, item) => acc + item, 0);
-    return result / arrMarks.length;
+    let result = arr.reduce((acc, item) => acc + item, 0) / arr.length;
+    return result;
   }
 
   exclude(reason) {
     this.excluded = reason;
-    delete this.subject;
-  };
-}
-
-class Algebra {
-  constructor(name) {
-    this.name = name;
-    this.marks = [];
-  }
-}
-
-class Geometry {
-  constructor(name) {
-    this.name = name;
-    this.marks = [];
-  }
-}
-
-class Physics {
-  constructor(name) {
-    this.name = name;
-    this.marks = [];
-  }
-}
-
-class History {
-  constructor(name) {
-    this.name = name;
-    this.marks = [];
+    delete this.marks;
   }
 }
