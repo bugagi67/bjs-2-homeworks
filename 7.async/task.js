@@ -7,18 +7,20 @@ class AlarmClock {
   }
 
   addClock(time, callback, id) {
-    if (id === undefined) {
-      throw new Error("ID не задан!");
-    } else if (this.alarmCollection.find((item) => item["id"] === id)) {
-      console.error("Будильник с данным ID уже существует!");
-      return;
+    if (id !== undefined) {
+      if (this.alarmCollection.find((item) => item["id"] === id)) {
+        console.error("Будильник с данным ID уже существует!");
+        return;
+      } else {
+        const alarm = {
+          time,
+          callback,
+          id,
+        };
+        this.alarmCollection.push(alarm);
+      }
     } else {
-      const alarm = {
-        time,
-        callback,
-        id,
-      };
-      this.alarmCollection.push(alarm);
+      throw new Error("ID не задан");
     }
   }
 
@@ -36,7 +38,7 @@ class AlarmClock {
     function checkClock(clock) {
       let now = new Date().toLocaleTimeString().slice(0, -3);
       if (now === clock.time) {
-        clock[callback]();
+        clock.callback();
       }
     }
     if (this.timerId === null) {
@@ -55,6 +57,9 @@ class AlarmClock {
   }
 
   printAlarms() {
+    console.log(
+      `Печать всех будильников в количестве ${this.alarmCollection.length}`
+    );
     this.alarmCollection.forEach((element) =>
       console.log(
         "Будильник №" + element["id"] + " заведён на " + element["time"]
