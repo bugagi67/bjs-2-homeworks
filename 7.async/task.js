@@ -7,45 +7,45 @@ class AlarmClock {
   }
 
   addClock(time, callback, id) {
-    if (id !== undefined) {
-      if (this.alarmCollection.find((item) => item["id"] === id)) {
-        console.error("Будильник с данным ID уже существует!");
-        return;
-      } else {
-        const alarm = {
-          time,
-          callback,
-          id,
-        };
-        this.alarmCollection.push(alarm);
-      }
-    } else {
+    if (id === undefined) {
       throw new Error("ID не задан");
-    }
-  }
+    } else if (this.alarmCollection.find((item) => item["id"] === id)) {
+      console.error("Будильник с данным ID уже существует!");
+      return;
+    } else {
+      this.alarmCollection.push({ time, callback, id }); // изначально так и написал, но  пробовал сделать вывод throw с использованием
+    }                                                   // try {} catch{}. Реализовал, все работало, но тест не проходил. В итоге просто удалил
+  }                                                    // try {} catch{} и оставил как было не форматируя. Почему try/catch не проходит тест?
 
   removeClock(id) {
+    const alarmCollectionLength = this.alarmCollection.length;
     let now = this.alarmCollection.filter((element) => element["id"] !== id);
     this.alarmCollection = now;
+    let result =
+      alarmCollectionLength > this.alarmCollection.length ? true : false;
+    return result; //про условия возврата true/false забыл, извините что потратили на это время.
   }
 
   getCurrentFormattedTime() {
-    let time = new Date().toLocaleTimeString().slice(0, -3);
-    return time;
+    return new Date().toLocaleTimeString().slice(0, -3);
   }
 
   start() {
-    function checkClock(clock) {
+    // исправил согласно комментарию
+    let checkClock = (clock) => {
       let now = new Date().toLocaleTimeString().slice(0, -3);
       if (now === clock.time) {
         clock.callback();
       }
-    }
-    if (this.timerId === null) {
-      let timerId = setInterval(() => {
+    };
+    if (this.timerId) {
+      // исправил согласно комментарию
+      return;
+    } else {
+      this.timerId = setInterval(() => {
+        // исправил согласно комментарию
         this.alarmCollection.forEach((element) => checkClock(element));
-      }, 5000);
-      this.timerId = timerId;
+      }, 1000);
     }
   }
 
@@ -69,6 +69,6 @@ class AlarmClock {
 
   clearAlarms() {
     this.stop();
-    this.alarmCollection.splice(0, this.alarmCollection.length);
+    this.alarmCollection = []; // исправил согласно комментарию
   }
 }
