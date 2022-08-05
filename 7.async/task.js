@@ -13,9 +13,9 @@ class AlarmClock {
       console.error("Будильник с данным ID уже существует!");
       return;
     } else {
-      this.alarmCollection.push({ time, callback, id }); // изначально так и написал, но  пробовал сделать вывод throw с использованием
-    }                                                   // try {} catch{}. Реализовал, все работало, но тест не проходил. В итоге просто удалил
-  }                                                    // try {} catch{} и оставил как было не форматируя. Почему try/catch не проходит тест?
+      this.alarmCollection.push({ time, callback, id });
+    }
+  }
 
   removeClock(id) {
     const alarmCollectionLength = this.alarmCollection.length;
@@ -23,7 +23,7 @@ class AlarmClock {
     this.alarmCollection = now;
     let result =
       alarmCollectionLength > this.alarmCollection.length ? true : false;
-    return result; //про условия возврата true/false забыл, извините что потратили на это время.
+    return result;
   }
 
   getCurrentFormattedTime() {
@@ -31,22 +31,17 @@ class AlarmClock {
   }
 
   start() {
-    // исправил согласно комментарию
     let checkClock = (clock) => {
-      let now = new Date().toLocaleTimeString().slice(0, -3);
-      if (now === clock.time) {
+      if (this.getCurrentFormattedTime() === clock.time) {
         clock.callback();
       }
     };
     if (this.timerId) {
-      // исправил согласно комментарию
       return;
-    } else {
-      this.timerId = setInterval(() => {
-        // исправил согласно комментарию
-        this.alarmCollection.forEach((element) => checkClock(element));
-      }, 1000);
     }
+    this.timerId = setInterval(() => {
+      this.alarmCollection.forEach((element) => checkClock(element));
+    }, 1000);
   }
 
   stop() {
@@ -69,6 +64,6 @@ class AlarmClock {
 
   clearAlarms() {
     this.stop();
-    this.alarmCollection = []; // исправил согласно комментарию
+    this.alarmCollection = [];
   }
 }
