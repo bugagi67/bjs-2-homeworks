@@ -17,49 +17,83 @@ function cachingDecoratorNew(func) {
 }
 
 function debounceDecoratorNew(func, delay) {
-  let timerId = null;
-  let first = false;
-  return function wrapper(...args) {
-    if (timerId) {
-      clearTimeout(timerId);
-    }
 
-    if (!first) {
-      first = true;
-      return func(...args);
-    }
-
-    timerId = setTimeout(() => {
-      timerId = null;
-      return func(...args);
-    }, delay);
-  };
-}
-
-function debounceDecorator2(func) {
-  let timerId = null;
-  let first = false;
+  let timeoutId = null;
   function wrapper(...args) {
     wrapper.count++;
-
-    if (timerId) {
-      clearTimeout(timerId);
-    }
-
-    if (!first) {
-      first = true;
+    if (timeoutId) {
+      clearTimeout(timeoutId);      //1
+    } else {
       wrapper.countCallBack++;
-      return func(...args);
+      func(...args);
     }
-
-    timerId = setTimeout(() => {
-      timerId = null;
+    timeoutId = setTimeout(() => {
       wrapper.countCallBack++;
-      return func(...args);
+      func(...args);
     }, delay);
   }
   wrapper.countCallBack = 0;
   wrapper.count = 0;
-
   return wrapper;
+
+// let timerId = null;
+// let first = false;
+// return function wrapper(...args) {   //2
+//   if (timerId) {
+//     clearTimeout(timerId);
+//   }
+
+//   if (!first) {
+//     first = true;
+//     return func(...args);
+//   }
+
+//   timerId = setTimeout(() => {
+//     timerId = null;
+//     return func(...args);
+//   }, delay);
+// };
+}
+
+function debounceDecorator2(func,delay) {
+  let timeoutId = null;
+  function wrapper(...args) {
+    wrapper.count++;
+    if (timeoutId) {
+      clearTimeout(timeoutId);      //1
+    } else {
+      wrapper.countCallBack++;
+      func(...args);
+    }
+    timeoutId = setTimeout(() => {
+      wrapper.countCallBack++;
+      func(...args);
+    }, delay);
+  }
+  wrapper.countCallBack = 0;
+  wrapper.count = 0;
+  return wrapper;
+
+  // let timerId = null;
+  // let first = false;
+  // function wrapper(...args) {
+  //   wrapper.count++;
+  //   if (timerId) {
+  //     clearTimeout(timerId);     //2
+  //   }
+  //   if (!first) {
+  //     first = true;
+  //     wrapper.countCallBack++;
+  //     return func(...args);
+  //   }
+  //   timerId = setTimeout(() => {
+  //     timerId = null;
+  //     wrapper.countCallBack++;
+  //     return func(...args);
+  //   }, delay);
+  // }
+  // wrapper.countCallBack = 0;
+  // wrapper.count = 0;
+
+  // return wrapper;
 }
